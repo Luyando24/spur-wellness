@@ -68,12 +68,12 @@ export default function Navbar() {
               href="/"
               className="flex items-center gap-2"
             >
-              <div className="relative h-9 w-44 sm:w-48 flex items-center">
+              <div className="relative h-7 w-36 sm:w-40 flex items-center">
                 <Image
                   src="/spur-logo.png"
                   alt="Spur Wellness Logo"
-                  width={180}
-                  height={36}
+                  width={140}
+                  height={28}
                   priority
                   className="object-contain object-left"
                   style={{ filter: "brightness(0)" }}
