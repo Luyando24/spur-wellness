@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ShoppingBag, User as UserIcon } from "lucide-react";
+import { Menu, X, ShoppingBag, User as UserIcon, ChevronDown } from "lucide-react";
 import { useCart } from "./CartContext";
 import { useAuth } from "./AuthContext";
 
@@ -13,6 +13,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileCategoriesOpen, setIsMobileCategoriesOpen] = useState(false);
   const { cartCount, setIsCartOpen } = useCart();
   const { user, signOut } = useAuth();
 
@@ -26,9 +28,18 @@ export default function Navbar() {
     return null;
   }
 
+  const categories = [
+    { label: "Kettlebells", href: "/shop?category=Kettlebells" },
+    { label: "Resistance Bands", href: "/shop?category=Resistance%20Bands" },
+    { label: "Exercise Balls", href: "/shop?category=Exercise%20Balls" },
+    { label: "Exercise Mats", href: "/shop?category=Exercise%20Mats" },
+    { label: "Artificial Turf", href: "/shop?category=Artificial%20Turf" },
+  ];
+
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/shop", label: "Shop" },
+    { href: "/shop?category=Artificial%20Turf", label: "Artificial Turf" },
     { href: "/wholesale", label: "Wholesale" },
     { href: "/about", label: "Our Story" },
     { href: "/contact", label: "Contact" },
@@ -73,7 +84,64 @@ export default function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-1">
-            {navLinks.map((link) => (
+            {/* Home Link */}
+            <Link
+              href="/"
+              className="relative px-4 py-2 text-sm font-semibold tracking-wide uppercase transition-all duration-200 group"
+              style={{
+                color: isActive("/") ? "#000000" : "#707070",
+                fontFamily: "var(--font-display)",
+              }}
+            >
+              Home
+              <span
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] rounded-full transition-all duration-200"
+                style={{
+                  backgroundColor: "#000000",
+                  width: isActive("/") ? "60%" : "0%",
+                }}
+              />
+            </Link>
+
+            {/* Categories Dropdown */}
+            <div
+              className="relative group"
+              onMouseEnter={() => setIsDropdownOpen(true)}
+              onMouseLeave={() => setIsDropdownOpen(false)}
+            >
+              <button
+                className="relative px-4 py-2 text-sm font-semibold tracking-wide uppercase transition-all duration-200 flex items-center gap-1 hover:text-black focus:outline-none"
+                style={{
+                  color: isDropdownOpen ? "#000000" : "#707070",
+                  fontFamily: "var(--font-display)",
+                }}
+              >
+                Categories
+                <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 group-hover:rotate-180" />
+              </button>
+
+              {/* Dropdown Menu */}
+              <div
+                className={`absolute left-0 mt-1 w-56 rounded-xl border border-neutral-100 bg-white shadow-xl py-2 transition-all duration-250 ${
+                  isDropdownOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2"
+                }`}
+              >
+                {categories.map((cat) => (
+                  <Link
+                    key={cat.label}
+                    href={cat.href}
+                    className="block px-5 py-3 text-xs font-bold uppercase tracking-wider text-neutral-600 hover:text-black hover:bg-neutral-50 transition-colors"
+                    style={{ fontFamily: "var(--font-display)" }}
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    {cat.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Other Nav Links */}
+            {navLinks.slice(1).map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -177,13 +245,76 @@ export default function Navbar() {
       <div
         className="md:hidden overflow-hidden transition-all duration-300 border-t"
         style={{
-          maxHeight: isOpen ? "400px" : "0",
+          maxHeight: isOpen ? "550px" : "0",
           borderColor: "#E5E5E7",
           backgroundColor: "#FFFFFF",
         }}
       >
         <div className="px-4 py-4 space-y-1">
-          {navLinks.map((link) => (
+          {/* Home Link */}
+          <Link
+            href="/"
+            className="flex items-center px-4 py-3 rounded-lg text-sm font-semibold uppercase tracking-wider transition-all duration-200"
+            style={{
+              color: isActive("/") ? "#000000" : "#707070",
+              backgroundColor: isActive("/")
+                ? "rgba(0,0,0,0.03)"
+                : "transparent",
+              fontFamily: "var(--font-display)",
+            }}
+            onClick={() => setIsOpen(false)}
+          >
+            Home
+            {isActive("/") && (
+              <span className="ml-auto w-1.5 h-1.5 rounded-full bg-black" />
+            )}
+          </Link>
+
+          {/* Categories Collapsible */}
+          <div>
+            <button
+              onClick={() => setIsMobileCategoriesOpen(!isMobileCategoriesOpen)}
+              className="flex items-center w-full px-4 py-3 rounded-lg text-sm font-semibold uppercase tracking-wider transition-all duration-200 focus:outline-none"
+              style={{
+                color: "#707070",
+                fontFamily: "var(--font-display)",
+              }}
+            >
+              Categories
+              <ChevronDown 
+                className={`ml-auto h-4 w-4 transition-transform duration-200 ${
+                  isMobileCategoriesOpen ? "rotate-180" : ""
+                }`} 
+              />
+            </button>
+            <div
+              className="overflow-hidden transition-all duration-300 pl-4 bg-neutral-50/50 rounded-lg"
+              style={{
+                maxHeight: isMobileCategoriesOpen ? "250px" : "0",
+              }}
+            >
+              {categories.map((cat) => (
+                <Link
+                  key={cat.label}
+                  href={cat.href}
+                  className="flex items-center px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition-colors"
+                  style={{
+                    color: pathname === cat.href ? "#000000" : "#707070",
+                    fontFamily: "var(--font-display)",
+                  }}
+                  onClick={() => {
+                    setIsOpen(false);
+                    setIsMobileCategoriesOpen(false);
+                  }}
+                >
+                  {cat.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Other Links */}
+          {navLinks.slice(1).map((link) => (
             <Link
               key={link.href}
               href={link.href}
