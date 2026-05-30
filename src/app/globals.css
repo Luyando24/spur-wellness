@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FFFFFF;
+  --foreground: #000000;
+
+  /* Brand Colors (Minimalist Black & White) */
+  --color-black: #000000;
+  --color-white: #FFFFFF;
+  --color-gray-dark: #121212;
+  --color-gray-medium: #707070;
+  --color-gray-light: #F5F5F7;
+  --color-border: #E5E5E7;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary: var(--color-black);
+  --color-secondary: var(--color-white);
+  --color-dark: var(--color-gray-dark);
+  --color-muted: var(--color-gray-medium);
+  --color-light: var(--color-gray-light);
+
+  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Oswald", sans-serif;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-gray-light);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-black);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-dark);
+}
+
+/* Focus visible */
+*:focus-visible {
+  outline: 2px solid var(--color-black);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+/* Marquee animation */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+/* Fade-in up animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Override tailwind dark mode classes to support black & white light-first mode */
+.dark\:bg-zinc-900 { background-color: #FFFFFF !important; }
+.dark\:bg-zinc-950 { background-color: var(--color-gray-light) !important; }
+.dark\:bg-zinc-800 { background-color: #FAFAFA !important; }
+.dark\:text-white { color: #000000 !important; }
+.dark\:text-gray-100 { color: #111111 !important; }
+.dark\:text-gray-200 { color: #222222 !important; }
+.dark\:text-gray-300 { color: #444444 !important; }
+.dark\:text-gray-400 { color: #666666 !important; }
+.dark\:border-zinc-800 { border-color: var(--color-border) !important; }
+.dark\:border-zinc-700 { border-color: #E5E5E7 !important; }
+.dark\:text-primary { color: var(--color-black) !important; }
